@@ -11,12 +11,16 @@
 
 
 //This function primes and apllies pagination links
-var addPagination = function(numStudents){
+var addPagination = function(list){
+  var thisList=list
+  $('div.pagination').remove();
+  var numStudents=thisList.length;
   if(numStudents<= 10){
     return null;
   }
   //Calculates number of need pages
     var numPages = Math.ceil(numStudents/10);
+    console.log(numPages);
   //Create div DOM object with class 'pagination'
     var pagesDiv = document.createElement('div');
     pagesDiv.className = 'pagination';
@@ -38,9 +42,17 @@ var addPagination = function(numStudents){
   //Set first ANCHOR to Active
     $('.pagination a:first').addClass('active');
 
+    $(thisList).each(function(index){
+      if (index > 9){
+        $(this).hide();
+      }
+    });
+
+    pageAction(thisList);
+
 }
 
-var pageAction = function (){
+var pageAction = function (list){
 //Bind Click to .PAGINATION links
   $(".pagination li a").click(function(){
     console.log('page action activated');
@@ -55,11 +67,11 @@ var pageAction = function (){
     $pageNum = ($pageNum-1);
     $pageNum = ($pageNum*10);
   //Separate and show page specific student list items
-    var visibleStudents = $('.student-list li').slice($pageNum,$pageNum+10);
+    var visibleStudents = list.slice($pageNum,$pageNum+10);
   //Hide No Results search text to make a cleaner flow (asthetic choice)
     $(noMatchHTML).hide();
   //Resets the search input to placeholder text (asthetic choice)
-    $('.student-search input').val('');
+    // $('.student-search input').val('');
   //jump out and show visible students
     return visibleStudents.show();
   });
@@ -87,6 +99,11 @@ var bindSearch = function(){
     //Grab search text
     var searchContent = $('.student-search input').val();
     console.log('this is what was searched: ' + searchContent);
+    //To exit search
+    if(searchContent===''){
+      return location.reload();
+    }
+    $('li.match').removeClass('match');
     //initialize result counter to toggle NO RESULTS text
     var resultsNum=0;
     //Hide all Students (makes it easier to toggle ON matching students)
@@ -96,14 +113,17 @@ var bindSearch = function(){
       //Evaluate the search terms,show matching students, and ++ results counter
       //Grab text from each LI to use as comparison to our search text
       var liText=$(this).text();
-      console.log(liText);
+      // console.log(liText);
       //Compare!
       if(liText.indexOf(searchContent.toLowerCase())!==-1){
         console.log('found a match');
         //Add 1 to the results
         resultsNum ++;
         //Displays this student
-        $(this).toggle();
+        $(this).addClass('match');
+        // $(this).toggle();
+
+
       }
     });
     //Analyze result counter, show message/Results depending.
@@ -117,6 +137,8 @@ var bindSearch = function(){
      //NOPE! We had at least 1 result
       $(noMatchHTML).hide();
     }
+    $('li.match').show();
+    addPagination($('li[class*=\'match\']'));
   });
 }
 
@@ -131,13 +153,8 @@ var createNoMatchHTML= function(){
 //LET'S DO THIS THING
 //On Page load: Show first 10 students
 $(document).ready(function(){
-  $('.student-list li').each(function(index){
-    if (index > 9){
-      $(this).hide();
-    }
-  });
   createNoMatchHTML();
-  addPagination($(".student-list").children("li").length);
-  pageAction();
+  addPagination($(".student-list li"));
+
 });
   addSearch();
