@@ -13,6 +13,7 @@
 //This function primes and apllies pagination links
 var addPagination = function(list){
   var thisList=list
+//Clears old pagination
   $('div.pagination').remove();
   var numStudents=thisList.length;
   if(numStudents<= 10){
@@ -154,6 +155,5 @@ var createNoMatchHTML= function(){
 $(document).ready(function(){
   createNoMatchHTML();
   addPagination($(".student-list li"));
-
 });
   addSearch();
