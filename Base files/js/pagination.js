@@ -41,7 +41,7 @@ var addPagination = function(list){
     $('.page').append(pagesDiv);
   //Set first ANCHOR to Active
     $('.pagination a:first').addClass('active');
-
+  //Shows first page content
     $(thisList).each(function(index){
       if (index > 9){
         $(this).hide();
@@ -70,8 +70,7 @@ var pageAction = function (list){
     var visibleStudents = list.slice($pageNum,$pageNum+10);
   //Hide No Results search text to make a cleaner flow (asthetic choice)
     $(noMatchHTML).hide();
-  //Resets the search input to placeholder text (asthetic choice)
-    // $('.student-search input').val('');
+
   //jump out and show visible students
     return visibleStudents.show();
   });
@@ -144,7 +143,7 @@ var bindSearch = function(){
 
 var createNoMatchHTML= function(){
   noMatchHTML=document.createElement('p');
-  noMatchText=document.createTextNode('There are no matches! Please try again or click a page below.');
+  noMatchText=document.createTextNode('There are no matches! Please try again.');
   $(noMatchHTML).append(noMatchText);
   $('.student-list').before().append(noMatchHTML);
   return $(noMatchHTML).hide();
